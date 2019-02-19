@@ -1,3 +1,6 @@
-.\\Glove/
-.ipynb_checkpoints/
+/.env
+/config-private.yml
+.gitkeep
 
+/data
+/results
