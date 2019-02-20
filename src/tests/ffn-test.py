@@ -1,8 +1,13 @@
+"""
+test cases for FFN module
+"""
+
 import unittest
 import numpy
 from src.models.feed_forward_network import *
-import torch
+from src.models.convolution_neural_network import *
 
+import torch
 
 
 def testffn():
@@ -14,3 +19,20 @@ def testffn():
 class MyTest(unittest.TestCase):
     def test(self):
         self.assertEqual(testffn().shape, torch.Size([1,2]))
+
+# ============================================================================ #
+"""
+test cases for CNN module
+"""
+
+
+def testcnn():
+    CNN = cnn_text(vocab_size = 5, embed_dim  = 10 , class_num =  2, out_channel_num = 8, kernel_sizes = [2,3,4], dropout = 0.5)
+    tensor = torch.Tensor(numpy.random.randint(5, size=[8, 32])).long()
+    return CNN(tensor)
+
+class MyTest(unittest.TestCase):
+    def test(self):
+        self.assertEqual(testcnn().shape, torch.Size([8,2]))
+
+

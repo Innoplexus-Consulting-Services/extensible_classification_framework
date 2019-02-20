@@ -4,7 +4,7 @@ Based on https://drivendata.github.io/cookiecutter-data-science/
 
 ```
 .
-├── Makefile                <- tasks
+├─ Makefile                <- tasks
 ├── config.yml              <- config file in YAML, can be exported as env vars if needed
 ├── config-private.yml      <- config file with private config (password, api keys, etc.)
 ├── data

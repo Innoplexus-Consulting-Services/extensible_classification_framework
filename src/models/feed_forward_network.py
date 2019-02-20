@@ -43,7 +43,7 @@ class ffn(torch.nn.Module):
     def linear_stacking(self):
         """
         linear stack layers with droupout and actiivations
-        :return:
+        :return: torch.nn.Sequential object
         """
         self.layers = OrderedDict()
         self.layers['input'] = torch.nn.Linear(self.input_size, self.perceptron_per_layer[0])
@@ -67,6 +67,3 @@ class ffn(torch.nn.Module):
         :return:
         """
         return self.network(X)
-
-
-
