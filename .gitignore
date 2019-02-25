@@ -6,6 +6,7 @@
 .gitkeep
 .*zip
 .*txt
+.*json
 .*vec
 /data
 /results
@@ -14,4 +15,6 @@ src/test_framworks/glove.6B
 .idea/
 src/models/__pycache__/
 src/__pycache__/
+.*.gz
+
 
