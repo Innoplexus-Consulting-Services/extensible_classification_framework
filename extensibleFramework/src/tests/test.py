@@ -4,7 +4,7 @@ import unittest
 import numpy
 from extensibleFramework.src.models.feed_forward_network import *
 from extensibleFramework.src.models.convolution_neural_network import *
-from extensibleFramework.   src.models.recurrrent_neural_network import *
+from extensibleFramework.   src.models.recurrent_nn_with_attention import *
 
 import torch
 
@@ -37,18 +37,17 @@ batch_size = 8
 n_layers = 1
 
 
-def testrnn():
-    ENCODER = RNN(input_size, hidden_size, embed_size, batch_size, n_layers=1, rnn_unit="GRU")
-    input = torch.Tensor(numpy.random.random([batch_size, input_size]))
-    encoder_output, encoder_hidden = ENCODER(input)
-    # print("ENCODER OUTPUT SHAPE : ", encoder_output.shape, "ENCODER HIDDEN STATE SHAPE : ", encoder_hidden.shape)
-    return encoder_output, encoder_hidden
+def testrnnAttention():
+    AM = RNNAttentionModel(output_size=20, hidden_size=100, vocab_size=64, embedding_length=120,
+                           batch_size=8,weights="")
+    tensor = torch.Tensor(np.random.randint(5, size=[8, 32])).long()
+    return AM(tensor)
 
 # =============================================================================== #
 
 class master_test(unittest.TestCase):
     def test(self):
-        self.assertEqual(testrnn()[0].shape, torch.Size([10,8,128]))
+        self.assertEqual(testrnnAttention().shape, torch.Size([8,20]))
         self.assertEqual(testcnn().shape, torch.Size([8,2]))
         self.assertEqual(testffn().shape, torch.Size([1,2]))
 
