@@ -1,10 +1,11 @@
 import torch
 from collections import OrderedDict
 import numpy
+import torch.nn.functional as F
 
 
 class ffn(torch.nn.Module):
-    def __init__(self, activation:str, num_layer : int, input_size : int, output_size : int, perceptron_per_layer : list , dropout = list):
+    def __init__(self,config_object):
         """
         Feed Forward Network class
         :param activation: String : Any of the above Relu, Selu, Tanh, Sigmoid
@@ -19,23 +20,20 @@ class ffn(torch.nn.Module):
                 print (FFN(tensor))
         """
         super(ffn, self).__init__()
-        self.activation =activation
-        self.num_layer =num_layer
-        self.input_size =  input_size
-        self.output_size =  output_size
-        self.perceptron_per_layer =perceptron_per_layer
-        self.dropout = dropout
+        self.activation =config_object.ffn_activation
+        self.num_layer = config_object.ffn_num_layer
+        self.input_size = config_object.ffn_input_size
+        self.output_size = config_object.ffn_final_output_classes
+        self.perceptron_per_layer = config_object.ffn_perceptron_per_layer
+        self.dropout = config_object.ffn_layer_wise_dropout
 
-        assert num_layer == len(perceptron_per_layer)
-        assert num_layer == len(dropout)
-
-        if (activation == 'Relu'):
+        if (self.activation == 'Relu'):
             self.activation = torch.nn.ReLU()
-        elif (activation == 'Selu'):
+        elif (self.activation == 'Selu'):
             self.activation = torch.nn.SELU()
-        elif (activation == 'Tanh'):
+        elif (self.activation == 'Tanh'):
             self.activation = torch.nn.Tanh()
-        elif (activation == 'Sigmoid'):
+        elif (self.activation == 'Sigmoid'):
             self.activation = torch.nn.Sigmoid()
 
         self.linear_stacking()
@@ -66,4 +64,4 @@ class ffn(torch.nn.Module):
         :param X:
         :return:
         """
-        return self.network(X)
+        return F.softmax(self.network(X), dim=1)

@@ -6,9 +6,8 @@ import numpy as np
 
 
 class RNNAttentionModel(torch.nn.Module):
-    def __init__(self, output_size, hidden_size, vocab_size, embedding_length, batch_size = None, weights =""):
+    def __init__(self,config_object):
         """
-
         batch_size : Size of the batch which is same as the batch_size of the data returned by the TorchText BucketIterator
         output_size : 2 = (pos, neg)
         hidden_sie : Size of the hidden_state of the LSTM
@@ -23,16 +22,22 @@ class RNNAttentionModel(torch.nn.Module):
         """
         super(RNNAttentionModel, self).__init__()
 
-        self.batch_size = batch_size
-        self.output_size = output_size
-        self.hidden_size = hidden_size
-        self.vocab_size = vocab_size
-        self.embedding_length = embedding_length
+        self.batch_size = config_object.batch_size
+        self.output_size = config_object.cnn_rnn_class_num
+        self.hidden_size = config_object.rnn_hidden_size
+        self.vocab_size = config_object.cnn_rnn_vocab_size
+        self.embedding_length = config_object.cnn_rnn_embed_dim
+        self.device = config_object.device
 
-        self.word_embeddings = nn.Embedding(vocab_size, embedding_length)
+        self.word_embeddings = nn.Embedding(self.vocab_size, self.embedding_length)
+        if bool(config_object.use_pretrained_weights) == True:
+            self.word_embeddings.weight.data.copy_(config_object.cnn_rnn_weights)
+            self.word_embeddings.weight.requires_grad = config_object.cnn_rnn_weight_is_trainable
+
+
         # self.word_embeddings.weights = nn.Parameter(weights, requires_grad=False)
-        self.lstm = nn.LSTM(embedding_length, hidden_size)
-        self.label = nn.Linear(hidden_size, output_size)
+        self.lstm = nn.LSTM(self.embedding_length, self.hidden_size)
+        self.label = nn.Linear(self.hidden_size, self.output_size)
 
     # self.attn_fc_layer = nn.Linear()
 
@@ -86,11 +91,11 @@ class RNNAttentionModel(torch.nn.Module):
         input = self.word_embeddings(input_sentences)
         input = input.permute(1, 0, 2)
         if self.batch_size is None:
-            h_0 = Variable(torch.zeros(1, self.batch_size, self.hidden_size))
-            c_0 = Variable(torch.zeros(1, self.batch_size, self.hidden_size))
+            h_0 = Variable(torch.zeros(1, self.batch_size, self.hidden_size)).to(self.device)
+            c_0 = Variable(torch.zeros(1, self.batch_size, self.hidden_size)).to(self.device)
         else:
-            h_0 = Variable(torch.zeros(1, self.batch_size, self.hidden_size))
-            c_0 = Variable(torch.zeros(1, self.batch_size, self.hidden_size))
+            h_0 = Variable(torch.zeros(1, self.batch_size, self.hidden_size)).to(self.device)
+            c_0 = Variable(torch.zeros(1, self.batch_size, self.hidden_size)).to(self.device)
 
         output, (final_hidden_state, final_cell_state) = self.lstm(input, (
         h_0, c_0))  # final_hidden_state.size() = (1, batch_size, hidden_size)
