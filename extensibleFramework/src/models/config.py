@@ -25,7 +25,7 @@ class Config:
         self.cnn_rnn_vocab_size = config_object.cnn_rnn_vocab_size  # Default : Need to set;  The total number of words in the trin data. This is required for to set embeddings layer input size in both cnn and rnn
         self.cnn_rnn_embed_dim = config_object.cnn_rnn_embed_dim # Default : 100; Embedding dimensions are required for cnn and rnn to set the outpuyt of the embeddings layer 
         self.cnn_rnn_class_num = config_object.cnn_rnn_class_num # Default : 50; output class number from cnn and ffn, this number is generally kept as 50 or 100 then this will be MErged and passed to the FFN
-        self.cnn_out_channel_num = config_object.out_channel_num # Default : 8; Conv2d Output channels for convolution module
+        self.cnn_out_channel_num = config_object.cnn_out_channel_num # Default : 8; Conv2d Output channels for convolution module
         self.cnn_kernel_sizes = config_object.cnn_kernel_sizes # Default [2,3,4] Conv2D kernal/filter size
         self.rnn_n_layers= config_object.rnn_n_layers # number of LSTM
         self.rnn_hidden_size = config_object.rnn_hidden_size # hidden untit size for LSTM units

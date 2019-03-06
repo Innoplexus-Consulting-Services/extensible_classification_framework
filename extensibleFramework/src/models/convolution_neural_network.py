@@ -23,11 +23,10 @@ class cnn_text(nn.Module):
         self.vocab_size = config_object.cnn_rnn_vocab_size
         self.embed_dim = config_object.cnn_rnn_embed_dim
         self.class_num = config_object.cnn_rnn_class_num
-        self.out_channel_num = config_object.cnn_out_channel_num
+        self.cnn_out_channel_num = config_object.cnn_out_channel_num
         self.kernel_sizes = config_object.cnn_kernel_sizes
         self.dropout = config_object.dropout
         self.stride = config_object.cnn_rnn_embed_dim # stride and embed size are same for this model
-
         self.embed = nn.Embedding(self.vocab_size, self.embed_dim)
         if config_object.use_pretrained_weights:
             self.embed.weight.data.copy_(config_object.cnn_rnn_weights)
@@ -35,9 +34,9 @@ class cnn_text(nn.Module):
 
 
         self.convs1 = nn.ModuleList(
-            [nn.Conv2d(in_channels=1, out_channels=self.out_channel_num, kernel_size=K, stride=self.stride) for K in self.kernel_sizes])
+            [nn.Conv2d(in_channels=1, out_channels=self.cnn_out_channel_num, kernel_size=K, stride=self.stride) for K in self.kernel_sizes])
         self.dropout = nn.Dropout(self.dropout)
-        self.fc1 = nn.Linear(len(self.kernel_sizes) * self.out_channel_num, self.class_num)
+        self.fc1 = nn.Linear(len(self.kernel_sizes) * self.cnn_out_channel_num, self.class_num)
 
     def forward(self, x):
         x = self.embed(x)  # (N, W, D)
