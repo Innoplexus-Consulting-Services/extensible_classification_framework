@@ -3,16 +3,28 @@ import os
 import warnings
 
 class Vectorizer:
+    """
+    This calss implements the custom vectorizer that is integrated with the torchtext
+    """
     def __init__(self,model_path):
         """
-        model_path : /data/extensibleFramework/extensibleFramework/embedidngs/fastText.model
+        takes the model path where the fasttext model is placed. 
+        for this version, the model must be local
+        model_path = /data/extensibleFramework/extensibleFramework/embedidngs/fastText.model
+        usage : V = Vectorizer(model_path)
         """
         print("Loading Model")
         self.model = FT_gensim.load(model_path)
         self.model
         print("Loaded Model Successfully")
 
-    def prepare_vectors(self,words, destination_file):
+    def prepare_vectors(self,vocab, destination_file):
+        """
+        This function takes all token  present in the vocabulary along with the destination file.
+        The destination file will be written with vector for all the tokens
+        vocab :  list of all the vocabs
+        destination_file : file where the vector needs to be dumped
+        """
         if os.path.exists(destination_file):
             warnings.warn("ALREADY EXSTS : "+ destination_file +"   make sure you dont over write previous vectors")
             reply = input('Go ahead and overwrite (y/n)')
@@ -22,7 +34,7 @@ class Vectorizer:
             elif  str(reply).lower() == 'y':
                 file_pointer = open(destination_file, "w")
                 error_count = 0
-                for each_word in words:
+                for each_word in vocab:
                     try:
                         file_pointer.write (str(each_word)+" "+str(" ".join([str(i) for i in self.model[each_word].tolist()]))+"\n")
                     except:    
@@ -37,7 +49,7 @@ class Vectorizer:
                 return False
         else:
             file_pointer = open(destination_file, "w")
-            for each_word in words:
+            for each_word in vocab:
                 file_pointer.write(str(each_word)+" "+str(self.model[each_word])+"\n")
             file_pointer.flush()
             file_pointer.close ()
