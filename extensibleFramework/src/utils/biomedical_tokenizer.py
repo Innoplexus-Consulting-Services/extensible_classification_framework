@@ -5,7 +5,7 @@ biomedical_entity_filename = os.path.join(dir, 'resources/within_5.txt')
 
 class getToknizer:
     def __init__(self):
-        self.tokenizer = MWETokenizer([],separator=' ')
+        self.tokenizer = MWETokenizer([],separator='_')
         for i in open(biomedical_entity_filename).read().splitlines():
             self.tokenizer.add_mwe(i.split(" "))
         self.tokenizer

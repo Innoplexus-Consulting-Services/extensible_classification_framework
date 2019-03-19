@@ -36,7 +36,7 @@ class Vectorizer:
                 error_count = 0
                 for each_word in vocab:
                     try:
-                        file_pointer.write (str(each_word)+" "+str(" ".join([str(i) for i in self.model[each_word].tolist()]))+"\n")
+                        file_pointer.write (str("_".join(each_word.split(" "))+" "+str(" ".join([str(i) for i in self.model[each_word].tolist()]))+"\n")
                     except:    
                         error_count = error_count + 1
                 print("Vectos returned to file : ", destination_file)
