@@ -17,7 +17,7 @@ class Vectorizer:
         self.model = FT_gensim.load(model_path)
         self.model
         print("Loaded Model Successfully")
-
+        
     def prepare_vectors(self,vocab, destination_file):
         """
         This function takes all token  present in the vocabulary along with the destination file.
