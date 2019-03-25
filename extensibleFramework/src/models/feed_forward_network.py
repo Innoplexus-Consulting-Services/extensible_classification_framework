@@ -48,6 +48,7 @@ class ffn(torch.nn.Module):
         if self.activation != 'Linear':
             self.layers['activation0'] = self.activation
         self.layers['Dropout' + str(0)] = torch.nn.Dropout(self.dropout[0])
+        
         for i in range(0, len(self.perceptron_per_layer) - 1):
             self.layers['Linear' + str(i)] = torch.nn.Linear(self.perceptron_per_layer[i], self.perceptron_per_layer[i + 1])
             if self.activation != 'Linear':
