@@ -11,6 +11,8 @@ json_array = []
 
 def to_json(input_file, output_destination, sep = '\t', split_ratio = 0.8):
     """
+    input_file: file where label and reviews are stored as delimited file.
+    output_destination: folder where the train and test split will be written.
     to convert the input csv file to json and split in to train and test file.
     """
     if os.path.isdir(output_destination):
@@ -48,6 +50,9 @@ def to_json(input_file, output_destination, sep = '\t', split_ratio = 0.8):
 
     
 if __name__=="__main__":
+    """
+    Usage : python preprocess.py --input_file /data/extensibleFramework/extensibleFramework/data/crude/small_data.tsv --output_destination /data/extensibleFramework/extensibleFramework/data/processed/ --sep "tab"
+    """
     seperator = {"tab": "\t", "comma":",", "colon":":", "semicolon":";"}
     parser = argparse.ArgumentParser(description='Preprocess data for text classification')
     parser.add_argument('--input_file', help='Input file having label and review seperated by delimiter.', required = True)

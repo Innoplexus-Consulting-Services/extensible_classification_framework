@@ -34,24 +34,36 @@ class Vectorizer:
             elif  str(reply).lower() == 'y':
                 file_pointer = open(destination_file, "w")
                 error_count = 0
+                unique_tokens = []
                 for each_word in vocab:
-                    try:
-                        file_pointer.write (str("_".join(each_word.split(" ")))+" "+str(" ".join([str(i) for i in self.model[each_word].tolist()]))+"\n")
-                    except:    
-                        error_count = error_count + 1
-                print("Vectos returned to file : ", destination_file)
-                print("Total errors : ",error_count)
+                    if each_word not in unique_tokens:
+                        try:
+                            file_pointer.write (str("_".join(each_word.split(" ")))+" "+str(" ".join([str(i) for i in self.model[each_word].tolist()]))+"\n")
+                            unique_tokens.append(each_word)
+                        except:    
+                            error_count = error_count + 1
                 file_pointer.flush()
                 file_pointer.close ()
                 print("File written successfuly : ", destination_file)
+                print("Total errors : ",error_count)
+
             else:
                 print ("Your IQ is too low to code this, please specify correct option \n\n Exiting...")
                 return False
         else:
             file_pointer = open(destination_file, "w")
+            error_count = 0
+            unique_tokens = []
             for each_word in vocab:
-                file_pointer.write(str(each_word)+" "+str(self.model[each_word])+"\n")
+                if each_word not in unique_tokens:
+                    try:
+                        file_pointer.write(str(each_word)+" "+str(self.model[each_word])+"\n")
+                    except:
+                        error_count = error_count + 1
             file_pointer.flush()
             file_pointer.close ()
-            print("File written successfuly : ", destination_file)
+            print("Vectos returned to file : ", destination_file)
+            print("Total errors : ",error_count)
+            file_pointer.flush()
+            file_pointer.close ()
             return True
