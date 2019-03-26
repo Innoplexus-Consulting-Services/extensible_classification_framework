@@ -20,3 +20,9 @@ class parameters:
         self.learning_rate =  [0.2]
         self.momentum = [0.9]
         self.device = "" # device
+
+    def set_cnn_rnn_weights(self, weights):
+        self.cnn_rnn_weights = weights
+
+    def set_device(self, device):
+        self.device = device

@@ -3,4 +3,6 @@ from extensibleFramework.src.models import convolution_neural_network
 from extensibleFramework.src.models import recurrrent_neural_network
 from extensibleFramework.src.models import recurrent_nn_with_attention
 from extensibleFramework.src.models import extra_layers
-from extensibleFramework.src.models import config
+from extensibleFramework.src.models import load_config
+from extensibleFramework.src.models import ensemble
+
