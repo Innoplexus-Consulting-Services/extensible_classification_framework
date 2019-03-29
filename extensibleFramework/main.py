@@ -147,7 +147,9 @@ def run (train_json, test_json, embeddigns, epochs, max_size, device, GS, TOKENI
     
 
 if __name__=="__main__":
-    # creating objects
+        # python main.py --train_json /data/extensibleFramework/extensibleFramework/data/processed/train.json --test_json /data/extensibleFramework/extensibleFramework/data/processed/test.json --embeddigns /data/extensibleFramework/extensibleFramework/embedidngs/glove.6B.100d.txt --epochs 1 --max_token 1000 --device = "gpu"
+
+        # creating objects
         SAL = saving_and_loading.objectManager()
         TOKENIZER = biomedical_tokenizer.getToknizer()
         PARAMETERS = config.parameters()
@@ -180,5 +182,3 @@ if __name__=="__main__":
         # print(args.device)
 
         run(args.train_json, args.test_json, args.embeddigns, args.epochs, args.max_token, args.device, GS, TOKENIZER, PARAMETERS, SAL)
-    
-# python main.py --train_json /data/extensibleFramework/extensibleFramework/data/processed/train.json --test_json /data/extensibleFramework/extensibleFramework/data/processed/test.json --embeddigns /data/extensibleFramework/extensibleFramework/embedidngs/glove.6B.100d.txt --epochs 1 --max_token 1000 --device = "gpu"
