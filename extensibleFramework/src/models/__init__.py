@@ -1,8 +1,8 @@
-from extensibleFramework.src.models import feed_forward_network
-from extensibleFramework.src.models import convolution_neural_network
-from extensibleFramework.src.models import recurrrent_neural_network
-from extensibleFramework.src.models import recurrent_nn_with_attention
-from extensibleFramework.src.models import extra_layers
-from extensibleFramework.src.models import load_config
-from extensibleFramework.src.models import ensemble
+from . import feed_forward_network
+from . import convolution_neural_network
+from . import recurrrent_neural_network
+from . import recurrent_nn_with_attention
+from . import extra_layers
+from . import load_config
+from . import ensemble
 

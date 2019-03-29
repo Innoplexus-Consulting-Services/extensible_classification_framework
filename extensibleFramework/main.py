@@ -1,3 +1,4 @@
+import argparse
 import datetime
 import json
 import os
@@ -6,7 +7,6 @@ import re
 import sys
 import tarfile
 import urllib
-import argparse
 
 import matplotlib.pyplot as plt
 import nltk
@@ -16,35 +16,21 @@ import torch
 from nltk.tokenize import MWETokenizer
 from torchtext import data, vocab
 from tqdm import tqdm
+from torch import nn
 
 import chakin
-from extensibleFramework.src.models import (load_config, convolution_neural_network,
-                                            extra_layers, feed_forward_network,
-                                            recurrent_nn_with_attention, ensemble)
+
+sys.path.append('/data/extensibleFramework/')
+
+from extensibleFramework import config
+from extensibleFramework.src.models import (convolution_neural_network,
+                                            ensemble, extra_layers,
+                                            feed_forward_network, load_config,
+                                            recurrent_nn_with_attention)
 from extensibleFramework.src.utils import (biomedical_tokenizer,
                                            custom_vectorizer, grid_search,
                                            saving_and_loading)
-from extensibleFramework import config
-sys.path.append('/data/extensibleFramework/')
 
-
-# creating objects
-SAL = saving_and_loading.objectManager()
-TOKENIZER = biomedical_tokenizer.getToknizer()
-PARAMETERS = config.parameters()
-SP = grid_search.searchParameters(PARAMETERS)
-
-
-# fixing seeds and device
-torch.manual_seed(0)
-np.random.seed(0)
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-torch.backends.cudnn.deterministic = True
-torch.backends.cudnn.benchmark = False
-
-# few paramters fetching
-parma_set= next(SP.random_search(1))
-batch_size = parma_set.batch_size
 
 def tokenize(sentiments):
     return TOKENIZER.tokenizer.tokenize(sentiments.split())
@@ -65,20 +51,25 @@ def binary_accuracy(preds, y):
     acc = correct.sum()/len(correct)
     return acc
 
-def test_accuracy_calculator(model, test_iterator):
+def test_accuracy_calculator(model, test_iterator,batch_size,device):
+    """
+    to calculate the test accuracy
+    """
     epoch_acc = 0
     for batch in test_iterator:
-        if batch.review.shape[0] ==  32:
+        if batch.review.shape[0] ==  batch_size:
             feature, target = batch.review, batch.label
             predictions = model(feature.to(device))            
             acc = binary_accuracy(predictions.type(torch.FloatTensor), target.type(torch.FloatTensor))
             epoch_acc += acc.item()
     return  epoch_acc / len(test_iterator)
 
-def train(model, iterator, optimizer, criterion):
+def train(model, iterator, optimizer, criterion, device):
+    """
+    to train the model
+    """
     epoch_loss = 0
     epoch_acc = 0
-    model.train()
     
     for batch in iterator:
         feature, target = batch.review, batch.label
@@ -92,33 +83,45 @@ def train(model, iterator, optimizer, criterion):
         epoch_acc += acc.item()
     return model, epoch_loss / len(iterator), epoch_acc / len(iterator)
 
-def main ():
+def run (train_json, test_json, embeddigns, epochs, max_size, device, GS, TOKENIZER, PARAMETERS, SAL):
+    """
+    Training various models on the same data
+    """
+
+    if device == "gpu":
+        device = torch.device("cuda")
+    else :
+        device = torch.device("cpu")
+
+    # few paramters fetching
+    parma_set= next(GS.random_search(1))
+    batch_size = parma_set.batch_size
+
     REVIEW = data.Field(sequential=True , tokenize=tokenize, use_vocab = True, lower=True,batch_first=True)
     LABEL = data.Field(is_target=True,use_vocab = False, sequential=False, preprocessing = to_categorical)
     fields = {'review': ('review', REVIEW), 'label': ('label', LABEL)}
     train_data , test_data = data.TabularDataset.splits(
                                 path = '',
-                                train = '../data/processed/train.json',
-                                test = '../data/processed/test.json',
+                                train = train_json,
+                                test = test_json,
                                 format = 'json',
                                 fields = fields) 
-    vec = vocab.Vectors(name = "../embedidngs/glove.6B.100d.txt",cache = "./")
-    REVIEW.build_vocab(train_data, test_data, max_size=400000, vectors=vec)
+    vec = vocab.Vectors(name = embeddigns,cache ="./")
+    REVIEW.build_vocab(train_data, test_data, max_size=int(max_size), vectors=vec)
     sentiment_vocab = REVIEW.vocab
     print("Length of the Vocab is : ",len(sentiment_vocab))
 
-    # Assign vocab and vector to the config object
-
-    ##############################################
     train_iter, test_iter = data.Iterator.splits(
         (train_data, test_data), sort_key=lambda x: len(x.review),
         batch_sizes=(batch_size,batch_size), device=device)
 
-    epochs  = 100
-    loss = []
-    accuracy = []
-    test_accuracy = []
-    for parma_set in SP.random_search(1):
+    PARAMETERS = config.parameters()
+    PARAMETERS.set_cnn_rnn_vocab_size(len(sentiment_vocab))
+    PARAMETERS.set_cnn_rnn_weights(sentiment_vocab.vectors)
+    PARAMETERS.set_device(device)
+    GS = grid_search.searchParameters(PARAMETERS)
+
+    for parma_set in GS.random_search(1):
         configuration = load_config.Config(parma_set)
         ENSEMBLE_MODEL   = ensemble.ensemble_model(configuration)
         ENSEMBLE_MODEL   = ENSEMBLE_MODEL.to(device)
@@ -126,18 +129,16 @@ def main ():
         criterion = nn.MSELoss()
         criterion = criterion.to(device)
         
-        for i in tqdm(range(epochs)):
+        for i in tqdm(range(int(epochs))):
             if (i != 0 and i%10 == 0 ):
                 for param_group in optimizer.param_groups:
                     param_group['lr'] = param_group['lr']/2
                 print(" === New Learning rate : ", param_group['lr'], " === ")
 
-            model, epoch_loss, epoch_acc = train(ENSEMBLE_MODEL , train_iter, optimizer, criterion)
+            model, epoch_loss, epoch_acc = train(ENSEMBLE_MODEL , train_iter, optimizer, criterion, device)
 
-            test_acc = test_accuracy_calculator(model, test_iter)
-            accuracy.append(epoch_acc)
-            loss.append(epoch_loss)
-            test_accuracy.append(test_acc)
+            test_acc = test_accuracy_calculator(model, test_iter, batch_size, device)
+
             print(epoch_acc,test_acc,epoch_loss)
 
         del configuration.device # because it is not serilizable
@@ -146,13 +147,38 @@ def main ():
     
 
 if __name__=="__main__":
-    seperator = {"tab": "\t", "comma":",", "colon":":", "semicolon":";"}
-    parser = argparse.ArgumentParser(description='Preprocess data for text classification')
-    parser.add_argument('--input_file', help='Input file having label and review seperated by delimiter.', required = True)
-    parser.add_argument('--output_destination',
-                        help='Destination folder where preprocessed file will be written.', required = True)
-    parser.add_argument('--sep', help='delimiter according to file structure. options: "tab" or "comma" or "colon" or "semicolon"', required = True)
-    parser.add_argument('--split_ratio', help='split ratio of the train file, any float value', default = 0.7)
-    args = parser.parse_args()
+    # creating objects
+        SAL = saving_and_loading.objectManager()
+        TOKENIZER = biomedical_tokenizer.getToknizer()
+        PARAMETERS = config.parameters()
+        GS = grid_search.searchParameters(PARAMETERS)
+
+        # fixing seeds and device
+        torch.manual_seed(0)
+        np.random.seed(0)
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        torch.backends.cudnn.deterministic = True
+        torch.backends.cudnn.benchmark = False
+
+        parser = argparse.ArgumentParser(description='Preprocess data for text classification')
+        parser.add_argument('--train_json', help='Train File prepared by using preprocess.py', required = True)
+        parser.add_argument('--test_json',
+                            help='Test File prepared using preprocess.py', required = True)
+        parser.add_argument('--embeddigns', help='Embedding file using prepare_vectors.py or pretrained downloaded vectors.', required = True)
+        parser.add_argument('--epochs', help='Max epoch for a single model trainig.', required = True)
+        parser.add_argument('--max_token', help='Max token to be considered for vocab generation.', required = False, default = 100000)
+        parser.add_argument('--device', help='CPU or GPU on which computation to be run', required=False, default = "gpu")
+        
+
+
+        args = parser.parse_args()
+        # print (args.train_json)
+        # print(args.test_json)
+        # print(args.embeddigns)
+        # print(args.epochs)
+        # print(args.max_token)
+        # print(args.device)
+
+        run(args.train_json, args.test_json, args.embeddigns, args.epochs, args.max_token, args.device, GS, TOKENIZER, PARAMETERS, SAL)
     
-    to_json(args.input_file, args.output_destination, seperator[args.sep], args.split_ratio)
+# python main.py --train_json /data/extensibleFramework/extensibleFramework/data/processed/train.json --test_json /data/extensibleFramework/extensibleFramework/data/processed/test.json --embeddigns /data/extensibleFramework/extensibleFramework/embedidngs/glove.6B.100d.txt --epochs 1 --max_token 1000 --device = "gpu"

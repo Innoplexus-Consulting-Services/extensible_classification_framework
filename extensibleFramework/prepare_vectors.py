@@ -34,6 +34,10 @@ def vectorize(model_path, train_file, test_file, vector_output_file, max_vocab_s
     print(len(REVIEW.vocab))
 
 if __name__=="__main__":
+    """
+    Example usage :
+    python prepare_vectors.py --model_path /data/extensibleFramework/extensibleFramework/embedidngs/fastText.model --train_file /data/extensibleFramework/extensibleFramework/data/processed/train.json --test_file /data/extensibleFramework/extensibleFramework/data/processed/test.json --vector_output_file /data/extensibleFramework/extensibleFramework/data/processed/vectors.vec
+    """
     parser = argparse.ArgumentParser(description='prepare vector using custom vectorizer')
     parser.add_argument('--model_path', help='local path to fasttext model', required = True)
     parser.add_argument('--train_file', help='Train json file path', required = True)
@@ -44,4 +48,3 @@ if __name__=="__main__":
     
     vectorize(args.model_path, args.train_file, args.test_file, args.vector_output_file, args.max_vocab_size)
 
-# python prepare_vectors.py --model_path /data/extensibleFramework/extensibleFramework/embedidngs/fastText.model --train_file /data/extensibleFramework/extensibleFramework/data/processed/train.json --test_file /data/extensibleFramework/extensibleFramework/data/processed/test.json --vector_output_file /data/extensibleFramework/extensibleFramework/data/processed/vectors.vec
