@@ -20,7 +20,7 @@ from torch import nn
 
 import chakin
 
-sys.path.append('/data/extensibleFramework/')
+# sys.path.append('/data/extensibleFramework/')
 
 from extensibleFramework import config
 from extensibleFramework.src.models import (convolution_neural_network,
@@ -93,10 +93,11 @@ def run (train_json, test_json, embeddigns, epochs, max_size, device, GS, TOKENI
     else :
         device = torch.device("cpu")
 
-    # few paramters fetching
+    # initlializing for paramters fetching
     parma_set= next(GS.random_search(1))
     batch_size = parma_set.batch_size
 
+    # review and label preprocessing
     REVIEW = data.Field(sequential=True , tokenize=tokenize, use_vocab = True, lower=True,batch_first=True)
     LABEL = data.Field(is_target=True,use_vocab = False, sequential=False, preprocessing = to_categorical)
     fields = {'review': ('review', REVIEW), 'label': ('label', LABEL)}
@@ -111,10 +112,12 @@ def run (train_json, test_json, embeddigns, epochs, max_size, device, GS, TOKENI
     sentiment_vocab = REVIEW.vocab
     print("Length of the Vocab is : ",len(sentiment_vocab))
 
+    # Designing Iterator
     train_iter, test_iter = data.Iterator.splits(
         (train_data, test_data), sort_key=lambda x: len(x.review),
         batch_sizes=(batch_size,batch_size), device=device)
 
+    # setting device, vocab size and vocan vectors to the parameter class
     PARAMETERS = config.parameters()
     PARAMETERS.set_cnn_rnn_vocab_size(len(sentiment_vocab))
     PARAMETERS.set_cnn_rnn_weights(sentiment_vocab.vectors)
@@ -123,8 +126,10 @@ def run (train_json, test_json, embeddigns, epochs, max_size, device, GS, TOKENI
 
     for parma_set in GS.random_search(1):
         configuration = load_config.Config(parma_set)
+        # initializing ensemble model
         ENSEMBLE_MODEL   = ensemble.ensemble_model(configuration)
         ENSEMBLE_MODEL   = ENSEMBLE_MODEL.to(device)
+        # defining optimizer and loss function
         optimizer = torch.optim.SGD(ENSEMBLE_MODEL.parameters(), lr=0.1,momentum=0.9)
         criterion = nn.MSELoss()
         criterion = criterion.to(device)
@@ -174,11 +179,4 @@ if __name__=="__main__":
 
 
         args = parser.parse_args()
-        # print (args.train_json)
-        # print(args.test_json)
-        # print(args.embeddigns)
-        # print(args.epochs)
-        # print(args.max_token)
-        # print(args.device)
-
         run(args.train_json, args.test_json, args.embeddigns, args.epochs, args.max_token, args.device, GS, TOKENIZER, PARAMETERS, SAL)

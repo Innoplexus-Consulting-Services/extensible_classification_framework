@@ -1,7 +1,7 @@
 from nltk.tokenize import MWETokenizer
 import os
 dir = os.path.dirname(__file__)
-biomedical_entity_filename = os.path.join(dir, 'resources/within_5.txt')
+biomedical_entity_filename = os.path.join(dir, 'resources/ontology_for_tokenizer.list')
 
 class getToknizer:
     def __init__(self):

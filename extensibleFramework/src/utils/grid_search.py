@@ -7,7 +7,10 @@ class searchParameters:
         self.chnageable_params = parameters
         
     def random_search(self, max_experiment):
-        for exp_no in range(0,max_experiment):
+        """
+        A function to randomaly take any of the specified configuration and return it for the model builing
+        """
+        for _ in range(0,max_experiment):
             self.chnageable_params.learning_rate = random.choice(self.parameters.learning_rate),
             self.chnageable_params.momentum = random.choice(self.parameters.momentum)
             self.chnageable_params.cnn_out_channel_num = random.choice(self.parameters.cnn_out_channel_num)

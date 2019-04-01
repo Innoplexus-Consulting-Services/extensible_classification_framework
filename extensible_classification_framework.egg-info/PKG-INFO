@@ -1,0 +1,22 @@
+Metadata-Version: 2.1
+Name: extensible-classification-framework
+Version: 0.0.1
+Summary: A package to test various model on the text classification task
+Home-page: UNKNOWN
+Author: Sunil Patel
+Author-email: sunil.patel@innoplexus.com
+License: UNKNOWN
+Description: 
+            This is an AutoML approach specifically designed for text classification problem. It has 3 modules
+             1) A convolution modul
+             2) A Attention based LSTM classifier
+             3) A Feed Forward Network 
+        
+             These 3 module can be run with various combinations to test best model that gives maximum efficiency.
+            
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3.6
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: Unix
+Classifier: Natural Language :: English
+Description-Content-Type: text/markdown
