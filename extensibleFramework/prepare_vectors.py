@@ -9,7 +9,6 @@ from extensibleFramework.src.utils import (biomedical_tokenizer,
 
 
 def vectorize(model_path, train_file, test_file, vector_output_file, max_vocab_size = 1000000):
-    print("main function called")
     def tokenize(sentiments):
         return sentiments.lower().split(" ")
     def to_categorical(x):

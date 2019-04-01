@@ -20,8 +20,6 @@ from torch import nn
 
 import chakin
 
-# sys.path.append('/data/extensibleFramework/')
-
 from extensibleFramework import config
 from extensibleFramework.src.models import (convolution_neural_network,
                                             ensemble, extra_layers,
