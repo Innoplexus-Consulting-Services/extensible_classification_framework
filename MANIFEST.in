@@ -1,0 +1,3 @@
+include README.md
+include extensibleFramework/src/utils/resources/ontology_for_tokenizer.list
+include funniest/data.json
