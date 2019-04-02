@@ -51,7 +51,7 @@ def to_json(input_file, output_destination, sep = '\t', split_ratio = 0.8):
     
 if __name__=="__main__":
     """
-    Usage : python preprocess.py --input_file /data/extensibleFramework/extensibleFramework/data/crude/small_data.tsv --output_destination /data/extensibleFramework/extensibleFramework/data/processed/ --sep "tab"
+    Usage : python preprocess.py --input_file /data/extensible_classification_framework/extensible_classification_framework/data/crude/small_data.tsv --output_destination /data/extensible_classification_framework/extensible_classification_framework/data/processed/ --sep "tab"
     """
     seperator = {"tab": "\t", "comma":",", "colon":":", "semicolon":";"}
     parser = argparse.ArgumentParser(description='Preprocess data for text classification')

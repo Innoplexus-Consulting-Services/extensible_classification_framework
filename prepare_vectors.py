@@ -3,7 +3,7 @@ import argparse
 
 from torchtext import data, vocab
 
-from extensibleFramework.src.utils import (biomedical_tokenizer,
+from extensible_classification_framework.src.utils import (biomedical_tokenizer,
                                            custom_vectorizer, grid_search,
                                            saving_and_loading)
 
@@ -35,7 +35,7 @@ def vectorize(model_path, train_file, test_file, vector_output_file, max_vocab_s
 if __name__=="__main__":
     """
     Example usage :
-    python prepare_vectors.py --model_path /data/extensibleFramework/extensibleFramework/embedidngs/fastText.model --train_file /data/extensibleFramework/extensibleFramework/data/processed/train.json --test_file /data/extensibleFramework/extensibleFramework/data/processed/test.json --vector_output_file /data/extensibleFramework/extensibleFramework/data/processed/vectors.vec
+    python prepare_vectors.py --model_path /data/extensible_classification_framework/extensible_classification_framework/embedidngs/fastText.model --train_file /data/extensible_classification_framework/extensible_classification_framework/data/processed/train.json --test_file /data/extensible_classification_framework/extensible_classification_framework/data/processed/test.json --vector_output_file /data/extensible_classification_framework/extensible_classification_framework/data/processed/vectors.vec
     """
     parser = argparse.ArgumentParser(description='prepare vector using custom vectorizer')
     parser.add_argument('--model_path', help='local path to fasttext model', required = True)

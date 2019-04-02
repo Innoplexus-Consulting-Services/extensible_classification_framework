@@ -1,3 +1,0 @@
-name = "extensiblframework"
-
-import extensibleFramework

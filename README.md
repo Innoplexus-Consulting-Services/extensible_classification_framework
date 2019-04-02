@@ -82,8 +82,8 @@ Installation Including following steps
 - Installation through pip
 
 ``` bash
-1. clone https://gitlab.innoplexus.de/Innoplexus-Consulting-Services/extensibleFramework.git
-2. pip install -U extensibleFramework/dist/extensible_classification_framework-0.0.1-py3-none-any.whl
+1. clone https://gitlab.innoplexus.de/Innoplexus-Consulting-Services/extensible_classification_framework.git
+2. pip install -U extensible_classification_framework/dist/extensible_classification_framework-0.0.1-py3-none-any.whl
 ```
 
 # Usage Directions
@@ -191,10 +191,10 @@ By default learning rate is halved every 10 epochs. You may change this as well
 ### 2.1 Changing  something in the core layers 
 
 
-Any changes made in the package (inside path `extensibleFramework/extensibleFramework/`) requires recompiling and re-installation.
+Any changes made in the package (inside path `extensible_classification_framework/extensible_classification_framework/`) requires recompiling and re-installation.
 For example I want to change the ontology file which helps in the custom tokenization metrics. The change the existing ontology file following chnages need to be done. 
 1. Replace 'resources/ontology_for_tokenizer.list' with new ontology
-2. cd to root project folder `/extensibleFramework`
+2. cd to root project folder `/extensible_classification_framework`
 3. Recompile with `python setup.py sdist bdist_wheel`
 4. New source will be generated at folder dist/ as `dist/extensible_classification_framework-0.0.1-py3-none-any.whl`
 5. Install the new source with pip `pip install -U dist/extensible_classification_framework-0.0.1-py3-none-any.whl`

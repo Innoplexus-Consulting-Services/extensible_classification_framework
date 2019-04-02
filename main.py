@@ -21,11 +21,11 @@ from torch import nn
 import chakin
 
 import config
-from extensibleFramework.src.models import (convolution_neural_network,
+from extensible_classification_framework.src.models import (convolution_neural_network,
                                             ensemble, extra_layers,
                                             feed_forward_network, load_config,
                                             recurrent_nn_with_attention)
-from extensibleFramework.src.utils import (biomedical_tokenizer,
+from extensible_classification_framework.src.utils import (biomedical_tokenizer,
                                            custom_vectorizer, grid_search,
                                            saving_and_loading)
 
@@ -82,7 +82,7 @@ def train(model, iterator, optimizer, criterion, device, batch_size):
             epoch_acc += acc.item()
     return model, epoch_loss / len(iterator), epoch_acc / len(iterator)
 
-def run (train_json, test_json, embeddigns, epochs, max_size, device, GS, TOKENIZER, PARAMETERS, SAL):
+def run (train_json, test_json, embeddigns, epochs, num_random_search, max_size, device, GS, TOKENIZER, PARAMETERS, SAL):
     """
     Training various models on the same data
     """
@@ -123,7 +123,7 @@ def run (train_json, test_json, embeddigns, epochs, max_size, device, GS, TOKENI
     PARAMETERS.set_device(device)
     GS = grid_search.searchParameters(PARAMETERS)
 
-    for parma_set in GS.random_search(1):
+    for parma_set in GS.random_search(int(num_random_search)):
         configuration = load_config.Config(parma_set)
         # initializing ensemble model
         ENSEMBLE_MODEL   = ensemble.ensemble_model(configuration)
@@ -151,7 +151,7 @@ def run (train_json, test_json, embeddigns, epochs, max_size, device, GS, TOKENI
     
 
 if __name__=="__main__":
-        # python main.py --train_json /data/extensibleFramework/extensibleFramework/data/processed/train.json --test_json /data/extensibleFramework/extensibleFramework/data/processed/test.json --embeddigns /data/extensibleFramework/extensibleFramework/embedidngs/glove.6B.100d.txt --epochs 1 --max_token 1000 --device = "gpu"
+        # python main.py --train_json /data/extensible_classification_framework/extensible_classification_framework/data/processed/train.json --test_json /data/extensible_classification_framework/extensible_classification_framework/data/processed/test.json --embeddigns /data/extensible_classification_framework/extensible_classification_framework/embedidngs/glove.6B.100d.txt --epochs 1 --max_token 1000 --device = "gpu"
 
         # creating objects
         SAL = saving_and_loading.objectManager()
@@ -162,7 +162,7 @@ if __name__=="__main__":
         # fixing seeds and device
         torch.manual_seed(0)
         np.random.seed(0)
-        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        device = torch.cuda.set_device(1) #torch.device("cuda" if torch.cuda.is_available() else "cpu")
         torch.backends.cudnn.deterministic = True
         torch.backends.cudnn.benchmark = False
 
@@ -171,11 +171,12 @@ if __name__=="__main__":
         parser.add_argument('--test_json',
                             help='Test File prepared using preprocess.py', required = True)
         parser.add_argument('--embeddigns', help='Embedding file using prepare_vectors.py or pretrained downloaded vectors.', required = True)
-        parser.add_argument('--epochs', help='Max epoch for a single model trainig.', required = True)
-        parser.add_argument('--max_token', help='Max token to be considered for vocab generation.', required = False, default = 100000)
+        parser.add_argument('--epochs', help='Max epoch for a single model trainig.', required = True, type=int)
+        parser.add_argument('--num_random_search', help='Number of random search to be carried out.', required = True, type=int)
+        parser.add_argument('--max_token', help='Max token to be considered for vocab generation.', required = False, default = 100000, type=int)
         parser.add_argument('--device', help='CPU or GPU on which computation to be run', required=False, default = "gpu")
         
 
 
         args = parser.parse_args()
-        run(args.train_json, args.test_json, args.embeddigns, args.epochs, args.max_token, args.device, GS, TOKENIZER, PARAMETERS, SAL)
+        run(args.train_json, args.test_json, args.embeddigns, args.epochs, args.num_random_search, args.max_token, args.device, GS, TOKENIZER, PARAMETERS, SAL)
