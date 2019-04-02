@@ -23,7 +23,7 @@ def to_json(input_file, output_destination, sep = '\t', split_ratio = 0.8, heade
             for i, row in enumerate(reader):
                 if header == True and i == 0:
                     pass
-                accumlator.append(str(json.dumps({'label' : row[1], 'review' : row[2]})))
+                accumlator.append(str(json.dumps({'label' : row[0], 'review' : row[1]})))
         # print(len(accumlator), int(len(accumlator)*split_ratio))
 
         # randomly shuffling dataset.
