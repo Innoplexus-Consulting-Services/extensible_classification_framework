@@ -30,7 +30,7 @@ def vectorize(model_path, train_file, test_file, vector_output_file, max_vocab_s
 
     REVIEW.build_vocab(train_data, test_data, max_size=max_vocab_size)
     CV.prepare_vectors(REVIEW.vocab.itos,vector_output_file)
-    print(len(REVIEW.vocab))
+    print("Vocab Size : ",len(REVIEW.vocab))
 
 if __name__=="__main__":
     """

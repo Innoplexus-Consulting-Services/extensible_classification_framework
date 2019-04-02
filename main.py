@@ -163,7 +163,9 @@ if __name__=="__main__":
         # fixing seeds and device
         torch.manual_seed(0)
         np.random.seed(0)
-        device = torch.cuda.set_device(1) #torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        # if you have multiple GPU and if you want to use any perticular GPU then  uncomment below line
+        # device = torch.cuda.set_device(1) 
         torch.backends.cudnn.deterministic = True
         torch.backends.cudnn.benchmark = False
 
