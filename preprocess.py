@@ -9,7 +9,7 @@ import argparse
 fieldnames = ("label","review")
 json_array = []
 
-def to_json(input_file, output_destination, sep = '\t', split_ratio = 0.8):
+def to_json(input_file, output_destination, sep = '\t', split_ratio = 0.8, header=True):
     """
     input_file: file where label and reviews are stored as delimited file.
     output_destination: folder where the train and test split will be written.
@@ -20,8 +20,10 @@ def to_json(input_file, output_destination, sep = '\t', split_ratio = 0.8):
         accumlator = []
         with open(input_file) as csvfile:
             reader = csv.reader(csvfile, delimiter = str(sep))
-            for row in reader:
-                accumlator.append(str(json.dumps({'label' : row[0], 'review' : row[1]})))
+            for i, row in enumerate(reader):
+                if header == True and i == 0:
+                    pass
+                accumlator.append(str(json.dumps({'label' : row[1], 'review' : row[2]})))
         # print(len(accumlator), int(len(accumlator)*split_ratio))
 
         # randomly shuffling dataset.
@@ -60,6 +62,8 @@ if __name__=="__main__":
                         help='Destination folder where preprocessed file will be written.', required = True)
     parser.add_argument('--sep', help='delimiter according to file structure. options: "tab" or "comma" or "colon" or "semicolon"', required = True)
     parser.add_argument('--split_ratio', help='split ratio of the train file, any float value', default = 0.7)
+    parser.add_argument('--header', help='if header is true then first row of the file will be omited', default = True)
+    
     args = parser.parse_args()
     
-    to_json(args.input_file, args.output_destination, seperator[args.sep], args.split_ratio)
+    to_json(args.input_file, args.output_destination, seperator[args.sep], args.split_ratio, args.header)

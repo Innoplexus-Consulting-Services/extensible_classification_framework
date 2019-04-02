@@ -142,7 +142,7 @@ class parameters:
 All the configurable paramter are well indicated, you can provide many configuration for this paramters and all combination will be explored at run time.
 
 ```bash
-python main.py --train_json example/data/processed/20190401-171735_train.json --test_json example/data/processed/20190401-171735_test.json --embeddigns example/vectors/vectors.vec --epochs 1 --max_token 1000 --device "gpu"
+python main.py --train_json example/data/processed/20190401-171735_train.json --test_json example/data/processed/20190401-171735_test.json --embeddigns example/vectors/vectors.vec --experiment_output_folder experments --epochs 1 --num_random_search 1 --max_token 1000 --device "gpu"
 ```
 
 # Modifying  Components
@@ -198,3 +198,18 @@ For example I want to change the ontology file which helps in the custom tokeniz
 3. Recompile with `python setup.py sdist bdist_wheel`
 4. New source will be generated at folder dist/ as `dist/extensible_classification_framework-0.0.1-py3-none-any.whl`
 5. Install the new source with pip `pip install -U dist/extensible_classification_framework-0.0.1-py3-none-any.whl`
+
+# Output
+At the end of experiement the out put of the model performance will be written to the output folder. A report along with model weights and detailed parramters for each model will be saved. 
+
+```bash
+Model Name : 20190307-214950	{'Train_accuracy': 0.50105, 'Test accuracy': 0.49880573248407645, 'Epoch Loss': 0.2500021963596344}
+Model Name : 20190307-225016	{'Train_accuracy': 0.9911, 'Test accuracy': 0.9140127388535032, 'Epoch Loss': 0.008758203177069063}
+Model Name : 20190307-235531	{'Train_accuracy': 0.97995, 'Test accuracy': 0.8957006369426752, 'Epoch Loss': 0.019956206692382284}
+Model Name : 20190308-005548	{'Train_accuracy': 0.50095, 'Test accuracy': 0.49880573248407645, 'Epoch Loss': 0.25000217723846435}
+Model Name : 20190308-020039	{'Train_accuracy': 0.9871, 'Test accuracy': 0.9112261146496815, 'Epoch Loss': 0.01284036571398924}
+Model Name : 20190308-031252	{'Train_accuracy': 0.98305, 'Test accuracy': 0.902468152866242, 'Epoch Loss': 0.01696283000286867}
+Model Name : 20190308-043051	{'Train_accuracy': 0.98465, 'Test accuracy': 0.9060509554140127, 'Epoch Loss': 0.015278951324956097}
+Model Name : 20190308-054936	{'Train_accuracy': 0.9839, 'Test accuracy': 0.9064490445859873, 'Epoch Loss': 0.016067581347950426}
+Model Name : 20190308-070506	{'Train_accuracy': 0.9858, 'Test accuracy': 0.9058519108280255, 'Epoch Loss': 0.014284096479360318}
+```

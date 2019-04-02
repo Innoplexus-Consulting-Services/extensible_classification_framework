@@ -82,7 +82,7 @@ def train(model, iterator, optimizer, criterion, device, batch_size):
             epoch_acc += acc.item()
     return model, epoch_loss / len(iterator), epoch_acc / len(iterator)
 
-def run (train_json, test_json, embeddigns, epochs, num_random_search, max_size, device, GS, TOKENIZER, PARAMETERS, SAL):
+def run (train_json, test_json, embeddigns, experiment_output_folder, epochs, num_random_search, max_size, device, GS, TOKENIZER, PARAMETERS, SAL):
     """
     Training various models on the same data
     """
@@ -105,6 +105,7 @@ def run (train_json, test_json, embeddigns, epochs, num_random_search, max_size,
                                 train = train_json,
                                 test = test_json,
                                 format = 'json',
+                                skip_header=True,
                                 fields = fields) 
     vec = vocab.Vectors(name = embeddigns,cache ="./")
     REVIEW.build_vocab(train_data, test_data, max_size=int(max_size), vectors=vec)
@@ -147,7 +148,7 @@ def run (train_json, test_json, embeddigns, epochs, num_random_search, max_size,
 
         del configuration.device # because it is not serilizable
         detailed_params  = json.dumps(configuration, default=lambda x: x.__dict__)
-        SAL.saver(ENSEMBLE_MODEL , "train",model_performance_metrics={"Train_accuracy":epoch_acc,"Test accuracy": test_acc, "Epoch Loss":epoch_loss}, detailed_params=detailed_params )
+        SAL.saver(ENSEMBLE_MODEL , experiment_output_folder,model_performance_metrics={"Train_accuracy":epoch_acc,"Test accuracy": test_acc, "Epoch Loss":epoch_loss}, detailed_params=detailed_params )
     
 
 if __name__=="__main__":
@@ -171,6 +172,7 @@ if __name__=="__main__":
         parser.add_argument('--test_json',
                             help='Test File prepared using preprocess.py', required = True)
         parser.add_argument('--embeddigns', help='Embedding file using prepare_vectors.py or pretrained downloaded vectors.', required = True)
+        parser.add_argument('--experiment_output_folder', help='Output folder where all the experiments will be saved.', required = True)
         parser.add_argument('--epochs', help='Max epoch for a single model trainig.', required = True, type=int)
         parser.add_argument('--num_random_search', help='Number of random search to be carried out.', required = True, type=int)
         parser.add_argument('--max_token', help='Max token to be considered for vocab generation.', required = False, default = 100000, type=int)
@@ -179,4 +181,4 @@ if __name__=="__main__":
 
 
         args = parser.parse_args()
-        run(args.train_json, args.test_json, args.embeddigns, args.epochs, args.num_random_search, args.max_token, args.device, GS, TOKENIZER, PARAMETERS, SAL)
+        run(args.train_json, args.test_json, args.embeddigns, args.experiment_output_folder, args.epochs, args.num_random_search, args.max_token, args.device, GS, TOKENIZER, PARAMETERS, SAL)
