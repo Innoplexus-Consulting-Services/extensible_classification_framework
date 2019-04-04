@@ -43,7 +43,7 @@ setuptools.setup(
         'pandas==0.24.1',
         'gensim==3.7.1',
         'numpy==1.16.1',
-
+        'scikit_learn==0.20.0',
     ],
 
 )

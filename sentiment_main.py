@@ -1,3 +1,6 @@
+###
+# This file is developed specifically to deal with inhouse sentiment analysis problem.
+###
 import argparse
 import datetime
 import json
@@ -7,6 +10,7 @@ import re
 import sys
 import tarfile
 import urllib
+from sklearn.metrics import classification_report
 import matplotlib.pyplot as plt
 import nltk
 import numpy as np
@@ -16,7 +20,6 @@ from nltk.tokenize import MWETokenizer
 from torchtext import data, vocab
 from tqdm import tqdm
 from torch import nn
-from sklearn.metrics import classification_report
 
 import chakin
 
@@ -34,10 +37,13 @@ def tokenize(sentiments):
     return TOKENIZER.tokenizer.tokenize(sentiments.split())
 
 def to_categorical(x):
+    x = int(x)
+    if x == 2:
+        return [1,0,0]
     if x == 1:
-        return [1,0]
+        return [0,1,0]
     if x == 0:
-        return [0,1]
+        return [0,0,1]
 
 def binary_accuracy(preds, y):
     """
@@ -143,16 +149,13 @@ def run (train_json, test_json, embeddigns, experiment_output_folder, epochs, nu
         for i in tqdm(range(int(epochs))):
             if (i != 0 and i%10 == 0 ):
                 for param_group in optimizer.param_groups:
-                    param_group['lr'] = param_group['lr']/2
-                print(" === New Learning rate : ", param_group['lr'], " === ")
-
+                    param_group['lr'] = param_group['lr']/2                
             model, epoch_loss, performance_matrics = train(ENSEMBLE_MODEL , train_iter, optimizer, criterion, device, batch_size)
             performance_metrics_test = test_accuracy_calculator(model, test_iter, batch_size, device)
 
         del configuration.device # because it is not serilizable
         detailed_params  = json.dumps(configuration, default=lambda x: x.__dict__)
         SAL.saver(ENSEMBLE_MODEL , experiment_output_folder,model_performance_metrics={"performance_metrics_train":performance_matrics,"performance_metrics_test": performance_metrics_test, "Epoch Loss":epoch_loss}, detailed_params=detailed_params )
-
 
 if __name__=="__main__":
         # python main.py --train_json /data/extensible_classification_framework/extensible_classification_framework/data/processed/train.json --test_json /data/extensible_classification_framework/extensible_classification_framework/data/processed/test.json --embeddigns /data/extensible_classification_framework/extensible_classification_framework/embedidngs/glove.6B.100d.txt --epochs 1 --max_token 1000 --device = "gpu"

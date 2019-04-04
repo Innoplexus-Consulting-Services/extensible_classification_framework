@@ -38,7 +38,7 @@ class Config:
         self.ffn_num_layer = config_object.ffn_num_layer; # Default can be 2-3 or more, Number of layers in the ffn module
         self.ffn_perceptron_per_layer = config_object.ffn_perceptron_per_layer # perceptron in each layers list [50, 25]
         self.ffn_layer_wise_dropout = config_object.ffn_layer_wise_dropout # layer wise droupout for eachlayer in ffn a list with probabilities [0.2, 0.2]
-        self.device = config_object.device # csn be defined as device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.device = config_object.device # can be defined as device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         # checking sanity of provided parameters
         self.sanity_check()
 

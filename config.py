@@ -21,7 +21,7 @@ class parameters:
         self.ffn_perceptron_per_layer = [[100,50, 25], [200,100, 50]] # configurable
         self.ffn_layer_wise_dropout = 0.2
         self.learning_rate =  [0.2, 0.1] # configurable
-        self.momentum = [0.9] # configurable
+        self.momentum = [0.9, 0.8] # configurable
         self.device = "" # device
 
     def set_cnn_rnn_weights(self, weights):
