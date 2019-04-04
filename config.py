@@ -4,7 +4,7 @@ class parameters:
         Here you may set parameters to be set
         """
         self.cnn_rnn_vocab_size = 0 #len(sentiment_vocab)
-        self.cnn_rnn_embed_dim = 100
+        self.cnn_rnn_embed_dim = 300
         self.cnn_rnn_class_num = [200, 100] # configurable
         self.cnn_out_channel_num = [24, 12, 6] # configurable
         self.cnn_kernel_sizes =  [3,4,5] # configurable
@@ -17,7 +17,7 @@ class parameters:
         self.batch_size = 32 #batch_size
         self.merge_mode = "CONCAT"
         self.ffn_activation =  "Relu"
-        self.ffn_final_output_classes =  2
+        self.ffn_final_output_classes =  3
         self.ffn_perceptron_per_layer = [[100,50, 25], [200,100, 50]] # configurable
         self.ffn_layer_wise_dropout = 0.2
         self.learning_rate =  [0.2, 0.1] # configurable

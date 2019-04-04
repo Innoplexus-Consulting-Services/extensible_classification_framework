@@ -7,7 +7,7 @@ import re
 import sys
 import tarfile
 import urllib
-
+from sklearn.metrics import classification_report
 import matplotlib.pyplot as plt
 import nltk
 import numpy as np
@@ -35,18 +35,22 @@ def tokenize(sentiments):
 
 def to_categorical(x):
     x = int(x)
+    if x == 2:
+        return [1,0,0]
     if x == 1:
-        return [0,1]
+        return [0,1,0]
     if x == 0:
-        return [1,0]
+        return [0,0,1]
 
 def binary_accuracy(preds, y):
     """
     Returns accuracy per batch, i.e. if you get 8/10 right, this returns 0.8, NOT 8
     """
     rounded_preds = torch.argmax(preds, dim=1)
+
     correct = (rounded_preds == torch.argmax(y, dim=1)).float() #convert into float for division 
     acc = correct.sum()/len(correct)
+    print(classification_report(torch.argmax(y, dim=1), rounded_preds))
     return acc
 
 def test_accuracy_calculator(model, test_iterator,batch_size,device):

@@ -10,7 +10,7 @@ setuptools.setup(
     version="0.3",
     author="Sunil Patel",
     author_email="sunil.patel@innoplexus.com",
-    description="Extensible Classsification framework is an engineering effort to make a well defined ensemble engine for the text classifcation task. This notebook is an usage guide for the first relese of Extensible framework.",
+    description="Extensible Classsification Framework is an engineering effort to make a well defined ensemble engine for the text classifcation task. This notebook is an usage guide for the first relese of Extensible framework.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     packages=setuptools.find_packages(),
@@ -34,15 +34,15 @@ setuptools.setup(
         'Topic :: Text Editors :: Text Processing',
     ],
     install_requires=[
-        'nltk==3.2.4'
-        'chakin==0.0.6'
-        'torch==0.4.1'
-        'tqdm==4.31.1'
-        'torchtext==0.3.1'
-        'matplotlib==2.2.2'
-        'pandas==0.24.1'
-        'gensim==3.7.1'
-        'numpy==1.16.1'
+        'nltk==3.2.4',
+        'chakin==0.0.6',
+        'torch==0.4.1',
+        'tqdm==4.31.1',
+        'torchtext==0.3.1',
+        'matplotlib==2.2.2',
+        'pandas==0.24.1',
+        'gensim==3.7.1',
+        'numpy==1.16.1',
 
     ],
 
