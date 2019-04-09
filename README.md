@@ -99,6 +99,7 @@ python preprocess.py --input_file example/data/crude/small_data.tsv --output_des
 ```
 
 #### 2. Prepare Vectors
+> Note : This is an optional step. Use this step if you want to build vector by calling fasttext model. Otherwise in the step 3 you may provide pre-trained word2vec, glove or fasttext embeddigns.
 
 This step is to call a fast text module prepared usiing gensim for vectorization on custom tokens. For this you need to have a pre-trained fasttext model.
 ```bash
@@ -142,7 +143,7 @@ class parameters:
 All the configurable parameter are well indicated, you can provide many configurations for these parameters and all combination will be explored at run time.
 
 ```bash
-python main.py --train_json example/data/processed/20190401-171735_train.json --test_json example/data/processed/20190401-171735_test.json --embeddigns example/vectors/vectors.vec --experiment_output_folder experments --epochs 1 --num_random_search 1 --max_token 1000 --device "gpu"
+python main.py --train_json example/data/processed/20190401-171735_train.json --test_json example/data/processed/20190401-171735_test.json --embeddings example/vectors/vectors.vec --experiment_output_folder experments --epochs 1 --num_random_search 1 --max_token 1000 --device "gpu"
 ```
 
 # Modifying  Components

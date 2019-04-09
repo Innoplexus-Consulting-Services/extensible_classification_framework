@@ -88,7 +88,7 @@ def train(model, iterator, optimizer, criterion, device, batch_size):
     performance_matrics = classification_report(all_predictions, all_target, output_dict = True)
     return model, epoch_loss / len(iterator), performance_matrics
 
-def run (train_json, test_json, embeddigns, experiment_output_folder, epochs, num_random_search, max_size, device, GS, TOKENIZER, PARAMETERS, SAL):
+def run (train_json, test_json, embeddings, experiment_output_folder, epochs, num_random_search, max_size, device, GS, TOKENIZER, PARAMETERS, SAL):
     """
     Training various models on the same data
     """
@@ -113,7 +113,7 @@ def run (train_json, test_json, embeddigns, experiment_output_folder, epochs, nu
                                 format = 'json',
                                 skip_header=True,
                                 fields = fields) 
-    vec = vocab.Vectors(name = embeddigns,cache ="./")
+    vec = vocab.Vectors(name = embeddings,cache ="./")
     REVIEW.build_vocab(train_data, test_data, max_size=int(max_size), vectors=vec)
     sentiment_vocab = REVIEW.vocab
     print("Length of the Vocab is : ",len(sentiment_vocab))
@@ -155,7 +155,7 @@ def run (train_json, test_json, embeddigns, experiment_output_folder, epochs, nu
 
 
 if __name__=="__main__":
-        # python main.py --train_json /data/extensible_classification_framework/extensible_classification_framework/data/processed/train.json --test_json /data/extensible_classification_framework/extensible_classification_framework/data/processed/test.json --embeddigns /data/extensible_classification_framework/extensible_classification_framework/embedidngs/glove.6B.100d.txt --epochs 1 --max_token 1000 --device = "gpu"
+        # python main.py --train_json /data/extensible_classification_framework/extensible_classification_framework/data/processed/train.json --test_json /data/extensible_classification_framework/extensible_classification_framework/data/processed/test.json --embeddings /data/extensible_classification_framework/extensible_classification_framework/embedidngs/glove.6B.100d.txt --epochs 1 --max_token 1000 --device = "gpu"
 
         # creating objects
         SAL = saving_and_loading.objectManager()
@@ -176,7 +176,7 @@ if __name__=="__main__":
         parser.add_argument('--train_json', help='Train File prepared by using preprocess.py', required = True)
         parser.add_argument('--test_json',
                             help='Test File prepared using preprocess.py', required = True)
-        parser.add_argument('--embeddigns', help='Embedding file using prepare_vectors.py or pretrained downloaded vectors.', required = True)
+        parser.add_argument('--embeddings', help='Embedding file using prepare_vectors.py or pretrained downloaded vectors.', required = True)
         parser.add_argument('--experiment_output_folder', help='Output folder where all the experiments will be saved.', required = True)
         parser.add_argument('--epochs', help='Max epoch for a single model trainig.', required = True, type=int)
         parser.add_argument('--num_random_search', help='Number of random search to be carried out.', required = True, type=int)
@@ -186,4 +186,4 @@ if __name__=="__main__":
 
 
         args = parser.parse_args()
-        run(args.train_json, args.test_json, args.embeddigns, args.experiment_output_folder, args.epochs, args.num_random_search, args.max_token, args.device, GS, TOKENIZER, PARAMETERS, SAL)
+        run(args.train_json, args.test_json, args.embeddings, args.experiment_output_folder, args.epochs, args.num_random_search, args.max_token, args.device, GS, TOKENIZER, PARAMETERS, SAL)
