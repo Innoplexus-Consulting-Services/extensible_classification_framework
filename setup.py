@@ -1,35 +1,49 @@
 import setuptools
+__author__ = 'sunil.patel <innoplexus.com>'
+
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
     name="extensible_classification_framework",
-    version="0.0.1",
+    version="0.3",
     author="Sunil Patel",
     author_email="sunil.patel@innoplexus.com",
-    description="A package to test various model on the text classification task",
-    long_description="""
-    This is an AutoML approach specifically designed for text classification problem. It has 3 modules
-     1) A convolution modul
-     2) A Attention based LSTM classifier
-     3) A Feed Forward Network 
-
-     These 3 module can be run with various combinations to test best model that gives maximum efficiency.
-    """,
+    description="Extensible Classsification Framework is an engineering effort to make a well defined ensemble engine for the text classifcation task. This notebook is an usage guide for the first relese of Extensible framework.",
+    long_description=long_description,
     long_description_content_type="text/markdown",
-    # url="https://github.com/pypa/sampleproject",
     packages=setuptools.find_packages(),
-     package_data = {
-        # If any package contains *.txt or *.rst files, include them:
-        '': ['*.list']
-    },
     include_package_data=True,
+    package_data={
+      'myapp': ['extensible_classification_framework/src/utils/resources/ontology_for_tokenizer.list'],
+   },
     classifiers=[
-        "Programming Language :: Python :: 3.6",
-        "License :: OSI Approved :: MIT License",
-        "Operating System :: Unix",
-        "Natural Language :: English",
-        
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.4',
+        'Environment :: Console',
+        'Intended Audience :: Science/Research',
+        'License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)',
+        'Operating System :: OS Independent',
+        'Topic :: Software Development :: Libraries',
+        'Topic :: Software Development :: Libraries :: Python Modules',
+        'Topic :: Scientific/Engineering :: Artificial Intelligence',
+        'Topic :: Scientific/Engineering :: Information Analysis',
+        'Topic :: Scientific/Engineering :: Image Recognition',
+        'Topic :: Text Editors :: Text Processing',
     ],
+    install_requires=[
+        'nltk==3.2.4',
+        'chakin==0.0.6',
+        'torch==0.4.1',
+        'tqdm==4.31.1',
+        'torchtext==0.3.1',
+        'matplotlib==2.2.2',
+        'pandas==0.24.1',
+        'gensim==3.7.1',
+        'numpy==1.16.1',
+        'scikit_learn==0.20.0',
+    ],
+
 )
