@@ -1,6 +1,7 @@
-
 <h1 align="center">Extensible Classification Framework</h1>
 ---
+[![Quality Gate Status](http://35.185.78.184/api/project_badges/measure?project=extensible_classification_framework&metric=alert_status)](http://35.185.78.184/dashboard?id=extensible_classification_framework)
+
 Extensible Classification framework is an engineering effort to make a well-defined ensemble engine for the text classification task. Extensible Classification framework built with an AutoML approach, it allows easy experimentation with a various model with just 3 steps. with Extensible Classification framework, you can test 100s of model overnight and send the best one to deployment.  This post is a usage guide for the first release of Extensible framework.
 
 This documentation will cover the following points:
