@@ -1,5 +1,0 @@
-include README.md
-include extensible_classification_framework/src/utils/resources/ontology_for_tokenizer.list
-include funniest/data.json
-include extensible_framework.png
-include LICENCE
